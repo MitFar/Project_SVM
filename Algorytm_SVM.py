@@ -11,6 +11,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from itertools import combinations
 
+#zmiana
+
 dane_rzeczywiste=pd.read_csv('Iris.csv') #załadowanie danych z exella, wyswietlenie ich stat, usuniecie columny id
 #print(dane_rzeczywiste)
 #print(dane_rzeczywiste.describe())

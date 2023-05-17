@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dd6e1841-0220-46ce-9eb2-3c1ccf1328b9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/Projekt.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pythonProject/.idea/pythonProject.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pythonProject/Algorytm_SVM.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pythonProject/TEST41.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pythonProject/TEST41.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pythonProject/dom3_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pythonProject/dom3_2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pythonProject/laby5_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pythonProject/laby5_1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorytm_SVM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Algorytm_SVM.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +10,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
