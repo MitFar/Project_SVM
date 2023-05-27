@@ -34,17 +34,14 @@ X_svm_test_train, X_svm_test_test, y_svm_test_train, y_svm_test_test = train_tes
 svc = SVC()
 svc.fit(X_svm_test_train, y_svm_test_train) #uczenie
 y_pred=svc.predict(X_svm_test_test)
-print("ypred SVC: ", y_pred)
-acc = accuracy_score(y_svm_test_test,y_pred)
+acc = accuracy_score(y_svm_test_test, y_pred)
 print('Accurancy liniowego SVM z biblioteki: ', acc)
 
 svc2 = aSVM()
 svc2.fit(X_svm_test_train, y_svm_test_train)
 y_pred2 = svc2.predict(X_svm_test_test)
 acc2 = accuracy_score(y_svm_test_test, y_pred)
-print("ypred2 aSVC:", y_pred2)
 print('Accurancy zdefiniowanego liniowego SVM', acc2)
-############################################################################################
 print('dane rzeczywiste: ', y_rz)
 print('dane syntetyczne: ', y)
 
@@ -53,46 +50,38 @@ ovo = one_vs_one()
 ovo.fit(X_train, y_train)
 y_pred3 = ovo.predict(X_test)
 acc3 = accuracy_score(y_test, y_pred3)
-print("ypred3 ovo synt:", y_pred3)
-print(acc3)
+print("acc score ovo syn: ", acc3)
+print("recall score ovo syn: ", recall_score(y_test, y_pred3, average='macro',  zero_division=1))
+print("prec score ovo syn: ", precision_score(y_test, y_pred3, average='macro', zero_division=1))
+print("f1_score score ovo syn: ", f1_score(y_test, y_pred3, average='macro'))
 
 ova = one_vs_all()
 ova.fit(X_train,y_train)
 y_pred_ova_syn = ova.predict(X_test)
 acc_ova_syn = accuracy_score(y_test, y_pred_ova_syn)
-print("OVA syntetyczne acc: ", acc_ova_syn)
+print("\nOVA syntetyczne acc: ", acc_ova_syn)
+print("recall score OVA syn: ", recall_score(y_test, y_pred_ova_syn, average='macro',  zero_division=1))
+print("prec score OVA syn: ", precision_score(y_test, y_pred_ova_syn, average='macro', zero_division=1))
+print("f1_score score OVA syn: ", f1_score(y_test, y_pred_ova_syn, average='macro'))
 
-print("etykiety y: ", y)
-print("y_pred ova syn: ", y_pred_ova_syn)
-
-"""""
-recall = recall_score(y_test, y_pred3)
-f1 = f1_score(y_test, y_pred3)
-print(acc3, precision,recall, f1) #
-
-np.save('wyniki_dane_syntetyczne.npy', [acc3, precision, recall, f1])
-    ###### eksperymenty dla danych rzeczywistych OVO i OVA #########
-"""
 ovo = one_vs_one()
 ovo.fit(X_rz_train, y_rz_train)
 y_pred4 = ovo.predict(X_rz_test)
 acc4 = accuracy_score(y_rz_test, y_pred4)
-print(acc4)
+print("\n Ove-vs-one dane rzeczywiste\nOVO dane rz acc score: ", acc4)
+print("recall score OVO syn: ", recall_score(y_rz_test, y_pred4, average='macro',  zero_division=1))
+print("prec score OVO syn: ", precision_score(y_rz_test, y_pred4, average='macro', zero_division=1))
+print("f1_score score OVO syn: ", f1_score(y_rz_test, y_pred4, average='macro'))
 
 ova = one_vs_all()
 ova.fit(X_rz_train, y_rz_train)
 y_pred_ova_rz = ova.predict(X_rz_test)
 acc_ova_rz = accuracy_score(y_rz_test, y_pred_ova_rz)
-print("OVA rzeczywiste: ", acc_ova_rz)
-print('ypred ova rz: ', y_pred_ova_rz)
-""""
-precision2 = precision_score(y_rz_test, y_pred4)
-recall2 = recall_score(y_rz_test, y_pred4)
-f1_2 = f1_score(y_rz_test, y_pred3)
-print(acc4, precision2, recall2, f1_2)  #
+print("\n Ove-vs-all dane rzeczywiste\nOVA rzeczywiste acc score: ", acc_ova_rz)
+print("recall score OVA rz: ", recall_score(y_rz_test, y_pred_ova_rz, average='macro',  zero_division=1))
+print("prec score OVA rz: ", precision_score(y_rz_test, y_pred_ova_rz, average='macro', zero_division=1))
+print("f1_score score OVA rz: ", f1_score(y_rz_test, y_pred_ova_rz, average='macro'))
 
-np.save('wyniki_dane_syntetyczne.npy', [acc4, precision2, recall2, f1_2])
-"""
 ###WALIDACJA KRZYŻOWA###
 
 ###TEST T-STUDENTA###
