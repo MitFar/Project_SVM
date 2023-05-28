@@ -26,7 +26,7 @@ class aSVM(BaseEstimator):
         self.w = np.zeros(n_features) #self.w - wektor zer o dlugosci n_features
         self.b = 0 #obiciazenie = 0, obciażenie
 
-        for _ in range(self.n_iters):
+        for k in range(self.n_iters):
             for i in range(n_samples):
                 if y[i] * (np.dot(X[i],self.w) - self.b) >=1: # czy wynik klasyfikacji jest wiekszy od 1
                     self.w -= self.lr * (2 * self.lambda_param * self.w) #if poprawna klasyfikacja, aktualizauje sie waga
