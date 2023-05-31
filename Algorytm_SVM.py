@@ -109,7 +109,7 @@ for i, (train_index, test_index) in enumerate(rskf.split(X_train, y_train)):
         scores_syn[clf_id,i, 1] = precision_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
         scores_syn[clf_id,i, 2] = recall_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
         scores_syn[clf_id,i, 3] = f1_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
-print(scores_syn)
+#print(scores_syn)
 avg = np.average(scores_syn, axis=1)
 
 #print(avg)
@@ -128,6 +128,7 @@ for clf_id, value in enumerate(clfss):
     print('Odchylenie standardowe F1-score:', std[clf_id,3], "\n")
 
 
+np.save('scores_syn.npy', scores_syn)
 
 print("\n-------------------------")
 
@@ -150,6 +151,7 @@ avg_rz = np.average(scores_rz, axis=1)
 #print("AVG" )
 #print(avg_rz)
 std_rz = np.std(scores_rz, axis=1)
+np.save('scores_rz.npy', scores_rz)
 
 
 for clf_id, value in enumerate(clfss):
