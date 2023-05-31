@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dd6e1841-0220-46ce-9eb2-3c1ccf1328b9" name="Changes" comment="f1, acc, recall, prec">
+    <list default="true" id="dd6e1841-0220-46ce-9eb2-3c1ccf1328b9" name="Changes" comment="ova, komenty, chyba ok jes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Algorytm_SVM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Algorytm_SVM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algorytmy.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorytmy.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +97,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685184256818</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="ova, komenty, chyba ok jes">
+      <created>1685553627294</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1685553627294</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -117,6 +123,7 @@
     <MESSAGE value="dwa" />
     <MESSAGE value="[0 0 0 0 0 0 smutny buziek.php]" />
     <MESSAGE value="f1, acc, recall, prec" />
-    <option name="LAST_COMMIT_MESSAGE" value="f1, acc, recall, prec" />
+    <MESSAGE value="ova, komenty, chyba ok jes" />
+    <option name="LAST_COMMIT_MESSAGE" value="ova, komenty, chyba ok jes" />
   </component>
 </project>

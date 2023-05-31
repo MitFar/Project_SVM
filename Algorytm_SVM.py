@@ -46,8 +46,8 @@ svc2.fit(X_svm_test_train, y_svm_test_train)
 y_pred2 = svc2.predict(X_svm_test_test)
 acc2 = accuracy_score(y_svm_test_test, y_pred)
 print('Accurancy zdefiniowanego liniowego SVM', acc2)
-print('dane rzeczywiste: ', y_rz)
-print('dane syntetyczne: ', y)
+#print('dane rzeczywiste: ', y_rz)
+#print('dane syntetyczne: ', y)
 
     ###### eksperymenty dla danych syntetycznych OVO i OVA #########
 ovo = one_vs_one()
@@ -109,7 +109,7 @@ for i, (train_index, test_index) in enumerate(rskf.split(X_train, y_train)):
         scores_syn[clf_id,i, 1] = precision_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
         scores_syn[clf_id,i, 2] = recall_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
         scores_syn[clf_id,i, 3] = f1_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
-#print(scores_syn)
+print(scores_syn)
 avg = np.average(scores_syn, axis=1)
 
 #print(avg)
