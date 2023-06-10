@@ -64,9 +64,11 @@ ova.fit(X_train,y_train)
 y_pred_ova_syn = ova.predict(X_test)
 acc_ova_syn = accuracy_score(y_test, y_pred_ova_syn)
 print("\nOVA syntetyczne acc: ", acc_ova_syn)
-print("recall score OVA syn: ", recall_score(y_test, y_pred_ova_syn, average='macro',  zero_division=0))
-print("prec score OVA syn: ", precision_score(y_test, y_pred_ova_syn, average='macro', zero_division=0))
-print("f1_score score OVA syn: ", f1_score(y_test, y_pred_ova_syn, average='macro',zero_division=0))
+print("recall score OVA syn: ", recall_score(y_test, y_pred_ova_syn, average='macro'))
+print("prec score OVA syn: ", precision_score(y_test, y_pred_ova_syn, average='macro'))
+print("f1_score score OVA syn: ", f1_score(y_test, y_pred_ova_syn, average='macro'))
+print('Y_testy dla ovo syn',y_test)
+print('Y pred ova syn', y_pred_ova_syn)
 
 ovo = one_vs_one()
 ovo.fit(X_rz_train, y_rz_train)
@@ -82,9 +84,9 @@ ova.fit(X_rz_train, y_rz_train)
 y_pred_ova_rz = ova.predict(X_rz_test)
 acc_ova_rz = accuracy_score(y_rz_test, y_pred_ova_rz)
 print("\n Ove-vs-all dane rzeczywiste\nOVA rzeczywiste acc score: ", acc_ova_rz)
-print("recall score OVA rz: ", recall_score(y_rz_test, y_pred_ova_rz, average='macro',  zero_division=0))
-print("prec score OVA rz: ", precision_score(y_rz_test, y_pred_ova_rz, average='macro', zero_division=0))
-print("f1_score score OVA rz: ", f1_score(y_rz_test, y_pred_ova_rz, average='macro', zero_division=0))
+print("recall score OVA rz: ", recall_score(y_rz_test, y_pred_ova_rz, average='macro'))
+print("prec score OVA rz: ", precision_score(y_rz_test, y_pred_ova_rz, average='macro'))
+print("f1_score score OVA rz: ", f1_score(y_rz_test, y_pred_ova_rz, average='macro'))
 
 
 
@@ -106,9 +108,11 @@ for i, (train_index, test_index) in enumerate(rskf.split(X_train, y_train)):
         clone_clf.fit(X_train_rskf, y_train_rskf)
         pred_rskf =clone_clf.predict(X_test_rskf)
         scores_syn[clf_id,i, 0] = accuracy_score(y_test_rskf, pred_rskf)
-        scores_syn[clf_id,i, 1] = precision_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
-        scores_syn[clf_id,i, 2] = recall_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
-        scores_syn[clf_id,i, 3] = f1_score(y_test_rskf, pred_rskf, average='macro',zero_division=1)
+        print('y_test_rskf: ',y_test_rskf)
+        print('pred_rsfk',pred_rskf)
+        scores_syn[clf_id,i, 1] = precision_score(y_test_rskf, pred_rskf, average='macro')
+        scores_syn[clf_id,i, 2] = recall_score(y_test_rskf, pred_rskf, average='macro')
+        scores_syn[clf_id,i, 3] = f1_score(y_test_rskf, pred_rskf, average='macro')
 print(scores_syn)
 avg = np.average(scores_syn, axis=1)
 
@@ -240,6 +244,45 @@ print('Wartość t-statystyki:', t_statistic1)
 print('Wartość p-value:', p_value1)
 
 
+#Tabelki
+from tabulate import tabulate
+
+table_data = [
+    ["One vs one dane syntetyczne", acc3, precision_score(y_test, y_pred3, average='macro', zero_division=0),recall_score(y_test, y_pred3, average='macro',  zero_division=0), f1_score(y_test, y_pred3, average='macro', zero_division=0)],
+    ["One vs one dane rzeczywiste", acc4, precision_score(y_rz_test, y_pred4, average='macro', zero_division=0), recall_score(y_rz_test, y_pred4, average='macro',  zero_division=0), f1_score(y_rz_test, y_pred4, average='macro', zero_division=0)],
+    ["One vs all dane syntetyczne", acc_ova_syn, precision_score(y_test, y_pred_ova_syn, average='macro', zero_division=0), recall_score(y_test, y_pred_ova_syn, average='macro',  zero_division=0), f1_score(y_test, y_pred_ova_syn, average='macro',zero_division=0)],
+    ["One vs all dane rzeczywiste", acc_ova_rz, precision_score(y_rz_test, y_pred_ova_rz, average='macro', zero_division=0), recall_score(y_rz_test, y_pred_ova_rz, average='macro',  zero_division=0), f1_score(y_rz_test, y_pred_ova_rz, average='macro', zero_division=0)]
+]
+
+
+head = ["Metoda", "Accuracy", "Precision", "Recall", "F1"]
+
+
+table = tabulate(table_data, headers=head, tablefmt="grid")
+
+
+print("\n\n\nPrezentacja jakości metryk w formie tabeli przed przeprowadzeniem walidacji krzyżowej")
+
+print(table)
+
+
+table1_data = [
+    ["One vs one dane syntetyczne", avg[0,0], avg[0,1], avg[0,2], avg[0,3]],
+    ["One vs one dane rzeczywiste", avg_rz[0,0], avg_rz[0,1], avg_rz[0,2], avg_rz[0,3]],
+    ["One vs all dane syntetyczne", avg[1,0], avg[1,1], avg[1,2], avg[1,3]],
+    ["One vs all dane rzeczywiste", avg_rz[1,0], avg_rz[1,1], avg_rz[1,2], avg_rz[1,3]]
+]
+
+
+head1 = ["Metoda", "Accuracy", "Precision", "Recall", "F1"]
+
+
+table1 = tabulate(table1_data, headers=head1, tablefmt="grid")
+
+
+print("\n\n\nPrezentacja jakości metryk w formie tabeli po przeprowadzeniu agregacji wyników z foldów walidacji krzyżowej")
+
+print(table1)
 
 
 
@@ -280,8 +323,5 @@ axs[1, 1].set_ylabel('Wartosc F1')
 axs[1, 1].set_title('Wykres porownaie F1')
 
 
-
-
 plt.tight_layout()
 plt.show()
-

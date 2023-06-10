@@ -40,21 +40,27 @@ class aSVM(BaseEstimator):
 class one_vs_one(BaseEstimator): #
     def __init__(self):
         self.classifiers = []
+        #self.classifier = classifier
+        self.classes = []
     def fit(self, X, y):
-        self.classes = np.unique(y).flatten()
+
+        self.classes = np.unique(y)#.flatten()
 
         for class_a, class_b in combinations(self.classes, 2): #wybiera wszystkie możliwe pary
-            szablon = (y==class_a) | (y == class_b) #True jeśli należą do jednej z dwóch klas ('a' lub 'b') jak nie to False
-            para_X = X[szablon] # tylko te elementy ze zbioru które są true, podzbiór danych treningowych dla danej pary klas
+            classif = aSVM()
+            mask = (y == class_a) | (y == class_b) #True jeśli należą do jednej z dwóch klas ('a' lub 'b') jak nie to False
+            #szablon_X = (X == class_a) | (X == class_b)
+            X_pair = X[mask] # tylko te elementy ze zbioru które są true, podzbiór danych treningowych dla danej pary klas
             #print('X[szablon] OVO: ', para_X) #print daje wartości danych treningowych [1,3222 -0,541424 2,55555 1,2234] itd
-            para_y = y[szablon] #etykiety ktore odpowiadaja wartosci TRUE, podzbior etykiet dla danej pary klas
+            y_pair = y[mask] #etykiety ktore odpowiadaja wartosci TRUE, podzbior etykiet dla danej pary klas
             #print('y[szablon] OVO: ', para_y) #print wyswietla arraya podzbioru etykiet dla kazdej pary klas [1 2 1 2 2 2 1 1] [0 0 00 011] itd.
 
-            classif = aSVM()
-            classif.fit(para_X, para_y)
+            y_binary = np.where(y_pair == class_a, 1, -1)
+            classif.fit(X_pair, y_binary)
 
             self.classifiers.append((class_a, class_b, classif)) #dodaje do arraya classifiers
             #self.classifiers = np.array(self.classifiers).flatten('C')
+        return self
     def predict(self, X_test): #glosowanie wiekszosciowe ta klasa co ma najwiecej glosow wygrywa, iteracja po all binarnych klasyfikatorach wytrenowanych na parach klas i zbieramy predykcje wskazujaca na konkretna klase
         przewidywane_etykiet = []
 
@@ -62,16 +68,26 @@ class one_vs_one(BaseEstimator): #
             class_votes = [0] * len(self.classes)
 
             for class_a, class_b, classif in self.classifiers:
-                glos = classif.predict([probka])[0] #
+                glos = classif.predict([probka])[0]
 
-                if glos >0:
-                    class_votes[class_a] +=1
+                class_a_idx = np.where(self.classes == class_a)[0][0] #porównanie elementow w tablicy self.classes z class_a, zwraca ablice indeksów w ktorych wartosci sa rowne class_a
+                #pobranie wszystich indeksow dla klasy_a
+                class_b_idx = np.where(self.classes == class_b)[0][0]
+               # if glos == class_a:
+                #    class_votes[class_a] +=1
+                #elif glos ==class_b:
+                #    class_votes[class_b] +=1
+                if glos > -1 :#-1:
+                    class_votes[class_a_idx] +=1
                 else:
-                    class_votes[class_b] +=1
-
+                    class_votes[class_b_idx] +=1
+            #print('class_votes ovo a: ',class_votes[class_a],'class_votes ovo b: ', class_votes[class_b])
+            #print('class votes: ', class_votes)
             przewidywane_etykiety = np.argmax(class_votes) #wybiera klase z max,najwieksza iloscia glosow
-            przewidywane_etykiet.append(przewidywane_etykiety) #etkieta dodawana do przewidywania etykiet
-
+            przewidywane_etykiet.append(self.classes[przewidywane_etykiety]) #etkieta dodawana do przewidywania etykiet
+            #print('przewidywanie etykiet ovo: ', przewidywane_etykiety)
+            #print('przewidywane etykiet ovo:', przewidywane_etykiet)
+        print('przewidywane etykiet OVO array: ', np.array(przewidywane_etykiet))
         return przewidywane_etykiet
     ######ONE VS REST##########
 class one_vs_all(BaseEstimator):
@@ -81,7 +97,7 @@ class one_vs_all(BaseEstimator):
     def fit(self, X, y):
         self.classes = np.unique(y).flatten() #unique wyznacza unikalne etykiety, flatte splaszcza tablice
         self.ilosc_klas = len(self.classes) #oblicza liczbe klas na podstawie unikalnych etykiet
-        self.classifiers = [] #pusta tablica na pary (etykieta klasy, klasyfikator), wielkosc macierzy 2 na ilosc poszczegolnych klas
+        #self.classifiers = [] #pusta tablica na pary (etykieta klasy, klasyfikator), wielkosc macierzy 2 na ilosc poszczegolnych klas
         for etykieta_klasy in self.classes: #iteracja po unikalnych etykietach klasy
             binarna_etykieta = np.where(y == etykieta_klasy, 1, -1) #jeśli etykieta należy do klasy 1 jeśli należy do każdej innej to -1!!!!
             classif = aSVM() #użycie aSVMa
@@ -106,5 +122,5 @@ class one_vs_all(BaseEstimator):
         przewidywane_etykiety  = np.argmax(macierz_wsparc, axis=1)#argmax zwraca index elementu o najwiekszej wartosci a tym wypadku etykiete
         # o najwiekszym wsparciu, axis=1 - przeszukanie w każdym wierszu macierzy,
         # przywidywanie_etykiet to tablica z indekasami kolumn z najwiekszymi wsparciami dla kazdego wiersza macierzy macierz_wsparc
-        #print('PRZEWIDYWANIE ETYKIET PREDICT OVA: ', przewidywane_etykiety) #print daje liste etykiet[0 1 2.....]
+        print('PRZEWIDYWANIE ETYKIET PREDICT OVA: ', przewidywane_etykiety) #print daje liste etykiet[0 1 2.....]
         return przewidywane_etykiety #zwraca przewidywanie_etykiet
