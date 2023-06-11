@@ -48,15 +48,15 @@ class one_vs_one(BaseEstimator): #
 
         for class_a, class_b in combinations(self.classes, 2): #wybiera wszystkie możliwe pary
             classif = aSVM()
-            mask = (y == class_a) | (y == class_b) #True jeśli należą do jednej z dwóch klas ('a' lub 'b') jak nie to False
+            maska = (y == class_a) | (y == class_b) #True jeśli należą do jednej z dwóch klas ('a' lub 'b') jak nie to False
             #szablon_X = (X == class_a) | (X == class_b)
-            X_pair = X[mask] # tylko te elementy ze zbioru które są true, podzbiór danych treningowych dla danej pary klas
+            para_X = X[maska] # tylko te elementy ze zbioru które są true, podzbiór danych treningowych dla danej pary klas
             #print('X[szablon] OVO: ', para_X) #print daje wartości danych treningowych [1,3222 -0,541424 2,55555 1,2234] itd
-            y_pair = y[mask] #etykiety ktore odpowiadaja wartosci TRUE, podzbior etykiet dla danej pary klas
+            para_y = y[maska] #etykiety ktore odpowiadaja wartosci TRUE, podzbior etykiet dla danej pary klas
             #print('y[szablon] OVO: ', para_y) #print wyswietla arraya podzbioru etykiet dla kazdej pary klas [1 2 1 2 2 2 1 1] [0 0 00 011] itd.
 
-            y_binary = np.where(y_pair == class_a, 1, -1)
-            classif.fit(X_pair, y_binary)
+            y_binarny = np.where(para_y == class_a, 1, -1)
+            classif.fit(para_X, y_binarny)
 
             self.classifiers.append((class_a, class_b, classif)) #dodaje do arraya classifiers
             #self.classifiers = np.array(self.classifiers).flatten('C')
@@ -65,7 +65,7 @@ class one_vs_one(BaseEstimator): #
         przewidywane_etykiet = []
 
         for probka in X_test:
-            class_votes = [0] * len(self.classes)
+            glosy_class = [0] * len(self.classes)
 
             for class_a, class_b, classif in self.classifiers:
                 glos = classif.predict([probka])[0]
@@ -74,16 +74,16 @@ class one_vs_one(BaseEstimator): #
                 #pobranie wszystich indeksow dla klasy_a
                 class_b_idx = np.where(self.classes == class_b)[0][0]
                # if glos == class_a:
-                #    class_votes[class_a] +=1
+                #    glosy_class[class_a] +=1
                 #elif glos ==class_b:
-                #    class_votes[class_b] +=1
+                #    glosy_class[class_b] +=1
                 if glos > -1 :#-1:
-                    class_votes[class_a_idx] +=1
+                    glosy_class[class_a_idx] +=1
                 else:
-                    class_votes[class_b_idx] +=1
+                    glosy_class[class_b_idx] +=1
             #print('class_votes ovo a: ',class_votes[class_a],'class_votes ovo b: ', class_votes[class_b])
             #print('class votes: ', class_votes)
-            przewidywane_etykiety = np.argmax(class_votes) #wybiera klase z max,najwieksza iloscia glosow
+            przewidywane_etykiety = np.argmax(glosy_class) #wybiera klase z max,najwieksza iloscia glosow
             przewidywane_etykiet.append(self.classes[przewidywane_etykiety]) #etkieta dodawana do przewidywania etykiet
             #print('przewidywanie etykiet ovo: ', przewidywane_etykiety)
             #print('przewidywane etykiet ovo:', przewidywane_etykiet)
