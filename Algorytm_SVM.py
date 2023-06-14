@@ -15,6 +15,7 @@ from sklearn.base import clone
 from scipy.stats import ttest_rel
 import matplotlib.pyplot as plt
 from algorytmy import *
+from sklearn.naive_bayes import GaussianNB
 
 dane_rzeczywiste=pd.read_csv('Iris.csv') #załadowanie danych z exella, wyswietlenie ich stat, usuniecie columny id
 dane_rzeczywiste.drop(columns = ['Id'], axis=1, inplace=True)
@@ -95,7 +96,7 @@ print("f1_score score OVA rz: ", f1_score(y_rz_test, y_pred_ova_rz, average='mac
 
 
 rskf = RepeatedStratifiedKFold(n_splits=2, n_repeats=5)
-clfss= [one_vs_one(),one_vs_all() ]
+clfss= [one_vs_one(),one_vs_all(), SVC(kernel='linear', decision_function_shape='ovo'), SVC(kernel='linear', decision_function_shape ='ovr'), GaussianNB(), KNeighborsClassifier()]
 
 scores_syn = np.zeros((len(clfss),10, 4))
 
@@ -277,6 +278,28 @@ table1_data = [
 head1 = ["Metoda", "Accuracy", "Precision", "Recall", "F1"]
 
 
+table1_data = [
+    ["One vs one dane syntetyczne", avg[0,0],std[0,0], avg[0,1],std[0,1], avg[0,2],std[0,2], avg[0,3],std[0,3]],
+    ["One vs one dane rzeczywiste", avg_rz[0,0],std_rz[0,0], avg_rz[0,1],std_rz[0,1], avg_rz[0,2],std_rz[0,2], avg_rz[0,3],std_rz[0,3]],
+    ["One vs all dane syntetyczne", avg[1,0],std[1,0], avg[1,1],std[1,1], avg[1,2],std[1,2], avg[1,3],std[1,3]],
+    ["One vs all dane rzeczywiste", avg_rz[1,0],std_rz[1,0], avg_rz[1,1],std_rz[1,1], avg_rz[1,2],std_rz[1,2], avg_rz[1,3],std_rz[1,3]],
+    ["One vs one z biblio dane  syntetyczne", avg[2,0],std[2,0], avg[2,1],std[2,1], avg[2,2],std[2,2], avg[2,3],std[2,3]],
+    ["One vs one z biblio dane rzeczywiste ", avg_rz[2,0],std_rz[2,0], avg_rz[2,1],std_rz[2,1], avg_rz[2,2],std_rz[2,2], avg_rz[2,3],std_rz[2,3]],
+    ["One vs all z biblio dane syntetyczne ", avg[3,0],std[3,0], avg[3,1],std[3,1], avg[3,2],std[3,2], avg[3,3],std[3,3]],
+    ["One vs all z biblio dane rzeczywiste ", avg_rz[3,0],std_rz[3,0], avg_rz[3,1],std_rz[3,1], avg_rz[3,2],std_rz[3,2], avg_rz[3,3],std_rz[3,3]],
+    ["GNB z biblio dane syntetyczne ", avg[4,0],std[4,0], avg[4,1],std[4,1], avg[4,2],std[4,2], avg[4,3],std[4,3]],
+    ["GNB z biblio dane rzeczywiste ", avg_rz[4,0],std_rz[4,0], avg_rz[4,1],std_rz[4,1], avg_rz[4,2],std_rz[4,2], avg_rz[4,3],std_rz[4,3]],
+    ["KNN z biblio dane syntetyczne ", avg[5,0],std[5,0], avg[5,1],std[5,1], avg[5,2],std[5,2], avg[5,3],std[5,3]],
+    ["KNN z biblio dane rzeczywiste ", avg_rz[5,0],std_rz[5,0], avg_rz[5,1],std_rz[5,1], avg_rz[5,2],std_rz[5,2], avg_rz[5,3],std_rz[5,3]]
+
+
+
+]
+
+
+head1 = ["Metoda", "Accuracy", "std Accuracy", "Precision", "std precision", "Recall","std recall", "F1", "std F1"]
+
+
 table1 = tabulate(table1_data, headers=head1, tablefmt="grid")
 
 
@@ -288,15 +311,17 @@ print(table1)
 
 ###WYKRESIKI TABELKI###
 
-categories = ['OVO_syn', 'Ovo_rz', 'OVA_rz','OVA_syn']
-data = [avg[0,0], avg_rz[0,0], avg_rz[1,0],avg[1,0]]
-data1 = [avg[0,1], avg_rz[0,1], avg_rz[1,1],avg[1,1]]
-data2 = [avg[0,2], avg_rz[0,2], avg_rz[1,2],avg[1,2]]
-data3 = [avg[0,3], avg_rz[0,3], avg_rz[1,3],avg[1,3]]
-std_dev = [std[0,0], std_rz[0,0], std_rz[1,0],std[1,0]]
-std_dev1 = [std[0,1], std_rz[0,1], std_rz[1,1],std[1,1]]
-std_dev2 = [std[0,2], std_rz[0,2], std_rz[1,2],std[1,2]]
-std_dev3 = [std[0,3], std_rz[0,3], std_rz[1,3],std[1,3]]
+categories = ['OVO  imp', 'Ova imp', 'OVO bib','OVA bib', "GNB", "kNN"]
+data = [avg[0,0], avg[1,0],avg[2,0], avg[3,0],avg[4,0], avg[5,0]]
+data1 = [avg[0,1], avg[1,1],avg[2,1], avg[3,1],avg[4,1], avg[5,1]]
+data2 = [avg[0,2], avg[1,2],avg[2,2], avg[3,2],avg[4,2], avg[5,2]]
+data3 = [avg[0,3], avg[1,3],avg[2,3], avg[3,3],avg[4,3], avg[5,3]]
+std_dev = [std[0,0], std[1,0], std[2,0],std[3,0],std[4,0],std[5,0]]
+std_dev1 = [std[0,1], std[1,1], std[2,1],std[3,1],std[4,1],std[5,1]]
+std_dev2 = [std[0,2], std[1,2], std[2,2],std[3,2],std[4,2],std[5,2]]
+std_dev3 = [std[0,3], std[1,3], std[2,3],std[3,3],std[4,3],std[5,3]]
+
+
 
 fig, axs = plt.subplots(2, 2, figsize=(10, 8))
 
@@ -305,22 +330,68 @@ fig, axs = plt.subplots(2, 2, figsize=(10, 8))
 axs[0, 0].bar(categories, data, yerr=std_dev, capsize=10)
 axs[0, 0].set_xlabel('Metody')
 axs[0, 0].set_ylabel('Wartosc accuracy')
-axs[0, 0].set_title('Wykres porownaie accuracy')
+axs[0, 0].set_title('Wykres porownaie accuracy dla danych syntetycznych')
 
 axs[0, 1].bar(categories, data1, yerr=std_dev1, capsize=10)
 axs[0, 1].set_xlabel('Metody')
 axs[0, 1].set_ylabel('Wartosc precsiom')
-axs[0, 1].set_title('Wykres porownaie precisoion')
+axs[0, 1].set_title('Wykres porownaie precisoion dla danych syntetycznych')
 
 axs[1, 0].bar(categories, data2, yerr=std_dev2, capsize=10)
 axs[1, 0].set_xlabel('Metody')
 axs[1, 0].set_ylabel('Wartosc recall')
-axs[1, 0].set_title('Wykres porownaie recall')
+axs[1, 0].set_title('Wykres porownaie recall dla danych syntetycznych')
 
 axs[1, 1].bar(categories, data3, yerr=std_dev3, capsize=10)
 axs[1, 1].set_xlabel('Metody')
 axs[1, 1].set_ylabel('Wartosc F1')
-axs[1, 1].set_title('Wykres porownaie F1')
+axs[1, 1].set_title('Wykres porownaie F1 dla danych syntetycznych')
+
+
+
+
+plt.tight_layout()
+plt.show()
+
+
+
+categories1 = ['OVO  imp', 'Ova imp', 'OVO bib','OVA bib', "GNB", "kNN"]
+ddata = [avg_rz[0,0], avg_rz[1,0],avg_rz[2,0], avg_rz[3,0],avg_rz[4,0], avg_rz[5,0]]
+ddata1 = [avg_rz[0,1], avg_rz[1,1],avg_rz[2,1], avg_rz[3,1],avg_rz[4,1], avg_rz[5,1]]
+ddata2 = [avg_rz[0,2], avg_rz[1,2],avg_rz[2,2], avg_rz[3,2],avg_rz[4,2], avg_rz[5,2]]
+ddata3 = [avg_rz[0,3], avg_rz[1,3],avg_rz[2,3], avg_rz[3,3],avg_rz[4,3], avg_rz[5,3]]
+std_ddev = [std_rz[0,0], std_rz[1,0], std_rz[2,0],std_rz[3,0],std_rz[4,0],std_rz[5,0]]
+std_ddev1 = [std_rz[0,1], std_rz[1,1], std_rz[2,1],std_rz[3,1],std_rz[4,1],std_rz[5,1]]
+std_ddev2 = [std_rz[0,2], std_rz[1,2], std_rz[2,2],std_rz[3,2],std_rz[4,2],std_rz[5,2]]
+std_ddev3 = [std_rz[0,3], std_rz[1,3], std_rz[2,3],std_rz[3,3],std_rz[4,3],std_rz[5,3]]
+
+
+
+fig1, axs1 = plt.subplots(2, 2, figsize=(10, 8))
+
+
+
+axs1[0, 0].bar(categories1, ddata, yerr=std_ddev, capsize=10)
+axs1[0, 0].set_xlabel('Metody')
+axs1[0, 0].set_ylabel('Wartosc accuracy')
+axs1[0, 0].set_title('Wykres porownaie accuracy dla danych rzeczywistych')
+
+axs1[0, 1].bar(categories, ddata1, yerr=std_ddev1, capsize=10)
+axs1[0, 1].set_xlabel('Metody')
+axs1[0, 1].set_ylabel('Wartosc precsiom')
+axs1[0, 1].set_title('Wykres porownaie precisoion dla danych rzeczywistych')
+
+axs1[1, 0].bar(categories, ddata2, yerr=std_ddev2, capsize=10)
+axs1[1, 0].set_xlabel('Metody')
+axs1[1, 0].set_ylabel('Wartosc recall')
+axs1[1, 0].set_title('Wykres porownaie recall dla danych rzeczywistych')
+
+axs1[1, 1].bar(categories, ddata3, yerr=std_ddev3, capsize=10)
+axs1[1, 1].set_xlabel('Metody')
+axs1[1, 1].set_ylabel('Wartosc F1')
+axs1[1, 1].set_title('Wykres porownaie F1 dla danych rzeczywistych')
+
+
 
 
 plt.tight_layout()
