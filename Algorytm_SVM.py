@@ -10,6 +10,7 @@ from sklearn import naive_bayes
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from itertools import combinations
+from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.base import clone
 from scipy.stats import ttest_rel
@@ -96,7 +97,7 @@ print("f1_score score OVA rz: ", f1_score(y_rz_test, y_pred_ova_rz, average='mac
 
 
 rskf = RepeatedStratifiedKFold(n_splits=2, n_repeats=5)
-clfss= [one_vs_one(),one_vs_all(), SVC(kernel='linear', decision_function_shape='ovo'), SVC(kernel='linear', decision_function_shape ='ovr'), GaussianNB(), KNeighborsClassifier()]
+clfss= [one_vs_one(),one_vs_all(), OneVsOneClassifier(SVC(kernel='linear')), OneVsRestClassifier(SVC(kernel='linear')), GaussianNB(), KNeighborsClassifier()]
 
 scores_syn = np.zeros((len(clfss),10, 4))
 
@@ -180,70 +181,46 @@ for clf_id, value in enumerate(clfss):
 
 ###TEST T-STUDENTA###
 
+alpha = 0.05
+metryki = ['Accuracy', 'Precision', 'Recall', 'F1']
 
-print("TEST T-Studenta  accuracy dla ovo syntetycznych i ova syntetycznych" )
+for m_index in range(len(metryki)):
 
-#print(scores_syn[0,:,0])
-#print(scores_syn[1,:,0])
+    for i in range(len(clfss)):
+        for j in range(i + 1, len(clfss)):
+            scores1 = scores_syn[i, :, m_index]
+            scores2 = scores_syn[j, :, m_index]
+            t_statistic, p_value = ttest_rel(scores1, scores2)
 
-
-#print(np.sum(scores_syn[0,:,0]))
-t_statistic, p_value = ttest_rel(scores_syn [0,:,0], scores_syn[1,:,0])
-
-print('Wartość t-statystyki:', t_statistic)
-print('Wartość p-value:', p_value)
-
-print("TEST T-Studenta  precsion dla ovo i ova syntetycznych" )
-
-t_statistic, p_value = ttest_rel(scores_syn[0,:,1], scores_syn[1,:,1])
-
-print('Wartość t-statystyki:', t_statistic)
-print('Wartość p-value:', p_value)
-
-
-print("TEST T-Studenta  recall dla ovo i ova syntetycznych" )
-
-t_statistic, p_value = ttest_rel(scores_syn[0,:,2], scores_syn[1,:,2])
-
-print('Wartość t-statystyki:', t_statistic)
-print('Wartość p-value:', p_value)
-
-print("TEST T-Studenta  f1 dla ovo i ova syntetycznych" )
-
-t_statistic, p_value = ttest_rel(scores_syn[0,:,3], scores_syn[1,:,3])
-
-print('Wartość t-statystyki:', t_statistic)
-print('Wartość p-value:', p_value)
+            print("Test t studenta ", metryki[m_index], " ", clfss[i]," i " ,clfss[j]," dane syntetyczne")
+            print("Wartośść statystyki t ", t_statistic)
+            print("Wartość p-value", p_value)
+            if p_value > alpha:
+                print('Brak istotnych roznic statystycznych')
+            elif t_statistic > 0:
+                print('Pierwszy algorytm jest statystyczne lepszy')
+            else:
+                print('Drugi algorytm jest statystycznie lepszy.\n')
 
 
-print("TEST T-Studenta  accuracy dla ovo i ova rzeczywisychh" )
 
-t_statistic1, p_value1 = ttest_rel(scores_rz[0,:,0], scores_rz[1,:,0])
+for m_index in range(len(metryki)):
 
-print('Wartość t-statystyki:', t_statistic1)
-print('Wartość p-value:', p_value1)
+    for i in range(len(clfss)):
+        for j in range(i + 1, len(clfss)):
+            scores1 = scores_rz[i, :, m_index]
+            scores2 = scores_rz[j, :, m_index]
+            t_statistic, p_value = ttest_rel(scores1, scores2)
 
-print("TEST T-Studenta  precision dla ovo i ova rzeczywistych" )
-
-t_statistic1, p_value1 = ttest_rel(scores_rz[0,:,1], scores_rz[1,:,1])
-
-print('Wartość t-statystyki:', t_statistic1)
-print('Wartość p-value:', p_value1)
-
-print("TEST T-Studenta  recall  dla ovo i ova rzeczywistych" )
-
-t_statistic1, p_value1 = ttest_rel(scores_rz[0,:,2], scores_rz[1,:,2])
-
-print('Wartość t-statystyki:', t_statistic1)
-print('Wartość p-value:', p_value1)
-
-print("TEST T-Studenta  f1 dla ovo i ova rzeczywistych" )
-
-t_statistic1, p_value1 = ttest_rel(scores_rz[0,:,3], scores_rz[1,:,3])
-
-print('Wartość t-statystyki:', t_statistic1)
-print('Wartość p-value:', p_value1)
-
+            print("Test t studenta ", metryki[m_index], " ", clfss[i]," i " ,clfss[j]," dane rzeczywiste")
+            print("Wartośść statystyki t ", t_statistic)
+            print("Wartość p-value", p_value)
+            if p_value > alpha:
+                print('Brak istotnych roznic statystycznych')
+            elif t_statistic > 0:
+                print('Pierwszy algorytm jest statystyczne lepszy')
+            else:
+                print('Drugi algorytm jest statystycznie lepszy.\n')
 
 #Tabelki
 from tabulate import tabulate
